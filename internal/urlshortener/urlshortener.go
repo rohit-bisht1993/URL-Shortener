@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/rohit-bisht1993/URL-Shortener/internal/constant"
 	"github.com/rohit-bisht1993/URL-Shortener/internal/utils"
 )
@@ -21,11 +22,13 @@ type UrlShortnerContext struct {
 	urls map[string]string
 }
 
+// NewUrlShortener
 func NewUrlShortener() *UrlShortnerContext {
 	urls := make(map[string]string)
 	return &UrlShortnerContext{urls: urls}
 }
 
+// UrlShortenerAPI short url api
 func (urlCntx *UrlShortnerContext) UrlShortenerAPI(w http.ResponseWriter, r *http.Request) {
 
 	// Read data from URL
@@ -59,6 +62,7 @@ func (urlCntx *UrlShortnerContext) UrlShortenerAPI(w http.ResponseWriter, r *htt
 	json.NewEncoder(w).Encode(shortenedURL)
 }
 
+// generateShortKey create short keys
 func (urlCntx *UrlShortnerContext) generateShortKey() string {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	const keyLength = 6
@@ -69,4 +73,24 @@ func (urlCntx *UrlShortnerContext) generateShortKey() string {
 		shortKey[i] = charset[rand.Intn(len(charset))]
 	}
 	return string(shortKey)
+}
+
+// Redirect Url handler
+func (urlCntx *UrlShortnerContext) RedirectAPI(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	shortKey := strings.TrimSpace(vars["urlshortenerkey"])
+	if shortKey == "" {
+		http.Error(w, "Shortened key is missing", http.StatusBadRequest)
+		return
+	}
+
+	// Retrieve the original URL from the `urls` map using the shortened key
+	originalURL, found := urlCntx.urls[shortKey]
+	if !found {
+		http.Error(w, "Shortened key not found", http.StatusNotFound)
+		return
+	}
+
+	// Redirect the user to the original URL
+	http.Redirect(w, r, originalURL, http.StatusMovedPermanently)
 }

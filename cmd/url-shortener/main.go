@@ -48,6 +48,12 @@ func main() {
 			"/api/v1/urlshortener",
 			urlShortenerCtx.UrlShortenerAPI,
 		},
+		{
+			"urlshortener",
+			strings.ToUpper("POST"),
+			"/api/v1/{urlshortenerkey}",
+			urlShortenerCtx.RedirectAPI,
+		},
 	}
 
 	router := createRouter(routes)
