@@ -50,7 +50,7 @@ func main() {
 		},
 		{
 			"urlshortener",
-			strings.ToUpper("POST"),
+			strings.ToUpper("GET"),
 			"/api/v1/{urlshortenerkey}",
 			urlShortenerCtx.RedirectAPI,
 		},

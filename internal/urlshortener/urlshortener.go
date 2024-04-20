@@ -92,5 +92,5 @@ func (urlCntx *UrlShortnerContext) RedirectAPI(w http.ResponseWriter, r *http.Re
 	}
 
 	// Redirect the user to the original URL
-	http.Redirect(w, r, originalURL, http.StatusMovedPermanently)
+	http.Redirect(w, r, originalURL, http.StatusSeeOther)
 }
