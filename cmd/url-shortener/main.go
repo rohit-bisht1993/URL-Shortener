@@ -43,16 +43,22 @@ func main() {
 	urlShortenerCtx := urlshortener.NewUrlShortener()
 	var routes = Routes{
 		{
-			"urlshortener",
+			"urlShortener",
 			strings.ToUpper("POST"),
 			"/api/v1/urlshortener",
 			urlShortenerCtx.UrlShortenerAPI,
 		},
 		{
-			"urlshortener",
+			"urlRedirect",
 			strings.ToUpper("GET"),
 			"/api/v1/{urlshortenerkey}",
 			urlShortenerCtx.RedirectAPI,
+		},
+		{
+			"UrlMetric",
+			strings.ToUpper("GET"),
+			"/api/v1/urlmetric/info",
+			urlShortenerCtx.UrlMetricAPI,
 		},
 	}
 
